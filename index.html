@@ -1130,19 +1130,22 @@ function buildBoard() {
 
 function bindEvents() {
   btnUndo.addEventListener('click', undo);
-  btnRestart.addEventListener('click', function() {
+  btnRestart.addEventListener('click', function(e) {
+    e.stopPropagation();
     pendingResetAction = 'restart';
     btnConfirmReset.textContent = '다시하기';
     modalReset.classList.add('show');
   });
-  btnNewGame.addEventListener('click', function() {
+  btnNewGame.addEventListener('click', function(e) {
+    e.stopPropagation();
     pendingResetAction = 'new';
     btnConfirmReset.textContent = '새 게임';
     modalReset.classList.add('show');
   });
-  btnBest.addEventListener('click', showRecords);
-  btnRecords.addEventListener('click', showRecords);
-  btnRules.addEventListener('click', function() {
+  btnBest.addEventListener('click', function(e) { e.stopPropagation(); showRecords(); });
+  btnRecords.addEventListener('click', function(e) { e.stopPropagation(); showRecords(); });
+  btnRules.addEventListener('click', function(e) {
+    e.stopPropagation();
     modalRules.classList.add('show');
   });
   btnWinContinue.addEventListener('click', function() {
