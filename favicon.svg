@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="12" fill="#2563EB"/>
+  <g transform="translate(8,8)">
+    <!-- 2x2 tile grid background -->
+    <rect x="0" y="0" width="48" height="48" rx="4" fill="#FFFFFF"/>
+
+    <!-- Tiles spelling 2-0-4-8 -->
+    <rect x="4" y="4" width="19" height="19" rx="3" fill="#EEE4DA"/>
+    <rect x="25" y="4" width="19" height="19" rx="3" fill="#EDE0C8"/>
+    <rect x="4" y="25" width="19" height="19" rx="3" fill="#EDE0C8"/>
+    <rect x="25" y="25" width="19" height="19" rx="3" fill="#F2B179"/>
+
+    <text x="13.5" y="18" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#776E65" text-anchor="middle">2</text>
+    <text x="34.5" y="18" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#776E65" text-anchor="middle">0</text>
+    <text x="13.5" y="39" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#776E65" text-anchor="middle">4</text>
+    <text x="34.5" y="39" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#F9F6F2" text-anchor="middle">8</text>
+  </g>
+</svg>
