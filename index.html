@@ -53,8 +53,8 @@
     "featureList": [
       "큰 글씨와 넉넉한 버튼",
       "스와이프·방향키·방향 버튼 조작",
-      "되돌리기 기능",
-      "기록 저장"
+      "최고 점수 자동 기록",
+      "모바일 한 화면 배치"
     ]
   }
   </script>
@@ -138,10 +138,10 @@ body{
   font-family:var(--font-family);
   background:var(--bg);
   color:var(--text);
-  min-height:100dvh;
+  height:100dvh;
+  overflow:hidden;
   display:flex;
   flex-direction:column;
-  overflow-x:hidden;
   -webkit-font-smoothing:antialiased;
   font-size:var(--text-base);
   line-height:var(--line-height);
@@ -158,7 +158,8 @@ body{
   padding:0 var(--space-4);
   display:flex;
   flex-direction:column;
-  min-height:100dvh;
+  height:100dvh;
+  overflow:hidden;
 }
 
 /* ═══════════════════════════════════════
@@ -289,19 +290,56 @@ body{
 }
 
 /* ═══════════════════════════════════════
+   DIFFICULTY — 4 level buttons, compact row
+   ═══════════════════════════════════════ */
+.difficulty-bar{
+  display:flex;
+  gap:var(--space-1);
+  justify-content:center;
+  flex-shrink:0;
+  padding:var(--space-1) 0 var(--space-2);
+}
+.diff-btn{
+  flex:1;
+  min-height:38px;
+  border-radius:var(--btn-radius);
+  border:2px solid var(--border);
+  background:var(--surface);
+  color:var(--text-secondary);
+  font-size:var(--text-sm);
+  font-weight:var(--weight-bold);
+  font-family:var(--font-family);
+  cursor:pointer;
+  transition:all var(--transition-base);
+  -webkit-tap-highlight-color:transparent;
+  line-height:1;
+}
+.diff-btn:active{
+  transform:scale(0.96);
+  background:var(--primary-light);
+}
+.diff-btn.active{
+  background:var(--primary);
+  border-color:var(--primary);
+  color:#FFFFFF;
+}
+
+/* ═══════════════════════════════════════
    BOARD — Largest element, thick borders
    ═══════════════════════════════════════ */
 .board-wrapper{
   display:flex;
   justify-content:center;
-  flex-shrink:0;
+  align-items:center;
+  flex:1 1 auto;
+  min-height:0;
   padding:var(--space-1) 0 var(--space-2);
 }
 .board{
   position:relative;
   display:grid;
-  grid-template-columns:repeat(4,var(--cell-size));
-  grid-template-rows:repeat(4,var(--cell-size));
+  grid-template-columns:repeat(var(--grid-size,4),var(--cell-size));
+  grid-template-rows:repeat(var(--grid-size,4),var(--cell-size));
   gap:var(--cell-gap);
   padding:var(--cell-gap);
   border:var(--board-border) solid var(--border-thick);
@@ -339,7 +377,7 @@ body{
   border-radius:var(--radius-sm);
   background:#EEE4DA;
   color:#776E65;
-  font-size:var(--text-tile);
+  font-size:calc(var(--cell-size) * 0.52);
   font-weight:var(--weight-extrabold);
   display:flex;
   align-items:center;
@@ -366,16 +404,19 @@ body{
 .tile-inner[data-value="8"],
 .tile-inner[data-value="16"],
 .tile-inner[data-value="32"],
-.tile-inner[data-value="64"]{font-size:clamp(20px,6.5vw,36px)}
+.tile-inner[data-value="64"]{font-size:calc(var(--cell-size) * 0.52)}
 .tile-inner[data-value="128"],
 .tile-inner[data-value="256"],
-.tile-inner[data-value="512"]{font-size:clamp(18px,6vw,30px)}
+.tile-inner[data-value="512"]{font-size:calc(var(--cell-size) * 0.48)}
 .tile-inner[data-value="1024"],
 .tile-inner[data-value="2048"],
-.tile-inner[data-value="4096"]{font-size:clamp(16px,5.5vw,26px)}
-.tile-inner[data-value="8192"],
+.tile-inner[data-value="4096"],
+.tile-inner[data-value="8192"]{font-size:calc(var(--cell-size) * 0.42)}
 .tile-inner[data-value="16384"],
-.tile-inner[data-value="32768"]{font-size:clamp(14px,5vw,22px)}
+.tile-inner[data-value="32768"],
+.tile-inner[data-value="65536"]{font-size:calc(var(--cell-size) * 0.34)}
+.tile-inner[data-value="131072"],
+.tile-inner[data-value="262144"]{font-size:calc(var(--cell-size) * 0.28)}
 .tile-inner.tile-new{
   animation:tilePop 200ms ease-out both;
 }
@@ -397,50 +438,6 @@ body{
   flex-direction:column;
   padding-bottom:max(var(--space-2),env(safe-area-inset-bottom));
   gap:var(--space-2);
-}
-
-/* ── Action Buttons — Only 3, very large ── */
-.action-row{
-  display:flex;
-  gap:var(--space-2);
-  justify-content:center;
-  padding:var(--space-1) 0;
-}
-.action-btn{
-  flex:1;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:var(--space-1);
-  padding:var(--space-2) var(--space-2);
-  border-radius:var(--btn-radius);
-  border:2.5px solid var(--border);
-  background:var(--surface);
-  color:var(--text-secondary);
-  font-size:var(--text-sm);
-  font-weight:var(--weight-bold);
-  font-family:var(--font-family);
-  cursor:pointer;
-  transition:all var(--transition-base);
-  box-shadow:var(--shadow-sm);
-  min-height:var(--touch-min);
-  -webkit-tap-highlight-color:transparent;
-  line-height:1.2;
-}
-.action-btn .btn-icon{
-  font-size:var(--text-xl);
-  line-height:1;
-}
-.action-btn:active{
-  transform:scale(0.96);
-  background:var(--primary-light);
-  border-color:var(--primary);
-  color:var(--primary);
-}
-.action-btn:disabled{
-  opacity:0.35;
-  pointer-events:none;
 }
 
 /* ── D-Pad — Compact 3-row layout ── */
@@ -637,46 +634,6 @@ body{
   50%{transform:scale(1.05)}
 }
 
-/* Records Modal */
-.modal-records{
-  max-width:380px;
-}
-.records-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:var(--space-3);
-  margin:var(--space-4) 0 var(--space-2);
-}
-.record-card{
-  border:2px solid var(--border);
-  border-radius:var(--radius);
-  padding:var(--space-4) var(--space-3);
-  text-align:center;
-  background:var(--surface);
-}
-.record-val{
-  font-size:clamp(18px,5vw,26px);
-  font-weight:var(--weight-extrabold);
-  color:var(--text);
-  display:block;
-  line-height:1.2;
-  white-space:nowrap;
-}
-.record-label{
-  font-size:var(--text-sm);
-  color:var(--text-muted);
-  display:block;
-  margin-top:var(--space-1);
-  font-weight:var(--weight-semibold);
-  white-space:nowrap;
-}
-.records-note{
-  font-size:var(--text-xs);
-  color:var(--text-muted);
-  margin-top:0;
-  line-height:1.3;
-}
-
 /* Rules Modal */
 .modal-rules{
   max-width:380px;
@@ -773,25 +730,45 @@ body{
 /* ═══════════════════════════════════════
    RESPONSIVE — Landscape & small screens
    ═══════════════════════════════════════ */
-@media(max-height:640px){
-  :root{--cell-size:44px;--cell-gap:6px;--text-tile:clamp(16px,5vw,24px)}
+@media(max-height:700px){
+  :root{--cell-size:clamp(48px,13vw,60px);--cell-gap:8px}
   .header{padding:var(--space-2) 0 var(--space-1)}
   .status-bar{padding:var(--space-1) 0 var(--space-2)}
+  .status-item{padding:var(--space-2) var(--space-2);min-height:36px}
+  .difficulty-bar{padding:2px 0 4px}
+  .diff-btn{min-height:32px;font-size:var(--text-xs)}
   .controls{gap:var(--space-1);padding-bottom:var(--space-1)}
-  .action-btn{padding:var(--space-1);min-height:44px}
-  .action-btn .btn-icon{font-size:var(--text-lg)}
-  .action-btn{font-size:var(--text-xs)}
-  .board-wrapper{padding:var(--space-1) 0 var(--space-1)}
+  .board-wrapper{padding:2px 0 4px}
   .dpad{gap:var(--space-1)}
   .dpad-btn{min-height:40px;font-size:clamp(18px,6vw,24px)}
   .dpad{grid-template-columns:repeat(3,clamp(44px,16vw,56px))}
 }
-@media(max-width:360px){
-  :root{--cell-size:clamp(54px,16vw,64px);--cell-gap:8px;--text-tile:clamp(20px,6.5vw,26px)}
+@media(max-height:640px){
+  :root{--cell-size:44px;--cell-gap:6px;--text-tile:clamp(16px,5vw,24px)}
+  .header{padding:var(--space-2) 0 var(--space-1)}
+  .status-bar{padding:var(--space-1) 0 var(--space-2)}
+  .status-item{padding:var(--space-2) var(--space-2);min-height:34px}
+  .difficulty-bar{padding:2px 0 4px}
+  .diff-btn{min-height:30px;font-size:var(--text-xs)}
+  .controls{gap:var(--space-1);padding-bottom:var(--space-1)}
+  .board-wrapper{padding:2px 0 4px}
+  .dpad{gap:var(--space-1)}
+  .dpad-btn{min-height:38px;font-size:clamp(16px,5vw,22px)}
+  .dpad{grid-template-columns:repeat(3,clamp(40px,14vw,52px))}
+}
+@media(max-width:380px){
+  :root{--cell-size:clamp(50px,14vw,56px);--cell-gap:8px;--text-tile:clamp(18px,6vw,24px)}
   .status-bar{gap:var(--space-1)}
-  .status-item{padding:var(--space-2) var(--space-3);font-size:var(--text-xs)}
-  .action-btn{padding:var(--space-1);font-size:var(--text-xs)}
-  .action-btn .btn-icon{font-size:var(--text-lg)}
+  .status-item{padding:var(--space-2) var(--space-2);font-size:var(--text-xs)}
+  .difficulty-bar{gap:var(--space-1);padding:2px 0 4px}
+  .diff-btn{min-height:34px;font-size:var(--text-xs)}
+}
+@media(max-width:360px){
+  :root{--cell-size:clamp(48px,13vw,54px);--cell-gap:8px;--text-tile:clamp(16px,5.5vw,22px)}
+  .status-bar{gap:var(--space-1)}
+  .status-item{padding:var(--space-2) var(--space-2);font-size:var(--text-xs)}
+  .difficulty-bar{gap:var(--space-1);padding:2px 0 4px}
+  .diff-btn{min-height:32px;font-size:var(--text-xs)}
 }
 @media(min-width:500px){
   .header-btn{padding:var(--space-2) var(--space-4)}
@@ -802,11 +779,10 @@ body{
 <body>
 
 <div class="container">
-  <!-- Header — Simplified: logo + records + new game -->
+  <!-- Header — Simplified: logo + new game -->
   <header class="header">
     <h1 class="logo">👨🏻 아빠의 2048</h1>
     <div class="header-actions">
-      <button class="header-btn header-btn-outline" id="btnRecords" aria-label="기록">기록</button>
       <button class="header-btn header-btn-outline" id="btnNewGame" aria-label="새 게임">새 게임</button>
     </div>
   </header>
@@ -818,22 +794,25 @@ body{
       <span class="timer" id="timerDisplay">00:00</span>
     </div>
     <span class="status-item score-display">점수 <span class="score-count" id="scoreCount">0</span></span>
+    <span class="status-item score-display">최고 <span class="score-count" id="bestScoreCount">0</span></span>
     <button class="status-item status-btn" id="btnRules" aria-label="규칙">규칙</button>
   </div>
 
+  <!-- Difficulty selection — 4 levels, large clear buttons -->
+  <div class="difficulty-bar" id="difficultyBar" role="group" aria-label="난이도 선택">
+    <button class="diff-btn" data-diff="easy" aria-label="초급">초급</button>
+    <button class="diff-btn" data-diff="medium" aria-label="중급">중급</button>
+    <button class="diff-btn" data-diff="hard" aria-label="고급">고급</button>
+    <button class="diff-btn" data-diff="expert" aria-label="전문가">전문가</button>
+  </div>
+
   <!-- Board — The star of the show -->
-  <div class="board-wrapper">
+  <div class="board-wrapper" id="boardWrapper">
     <div class="board" id="board"></div>
   </div>
 
   <!-- Controls — Bottom-anchored for thumb reach -->
   <div class="controls">
-    <!-- Action buttons -->
-    <div class="action-row">
-      <button class="action-btn" id="btnUndo"><span class="btn-icon">↩</span>되돌리기</button>
-      <button class="action-btn" id="btnRestart"><span class="btn-icon">🔄</span>다시하기</button>
-      <button class="action-btn" id="btnBest"><span class="btn-icon">🏆</span>최고기록</button>
-    </div>
     <!-- Direction pad — Large, finger-friendly -->
     <div class="dpad" id="dpad" aria-label="방향 버튼">
       <button class="dpad-btn" data-dir="up" aria-label="위로">⬆</button>
@@ -866,7 +845,7 @@ body{
       <span class="modal-emoji">🎉</span>
       <h2>축하합니다!</h2>
     </div>
-    <p>2048 타일을 만들었습니다</p>
+    <p id="winMessage">2048 타일을 만들었습니다</p>
     <div id="winNewRecord" class="new-record-badge" style="display:none">🏆 새 기록!</div>
     <div class="completion-stats">
       <div class="stat"><span class="stat-val" id="winTime">00:00</span><span class="stat-label">시간</span></div>
@@ -895,23 +874,7 @@ body{
       <div class="stat"><span class="stat-val" id="goBest">0</span><span class="stat-label">최고기록</span></div>
     </div>
     <div class="modal-actions">
-      <button class="btn btn-secondary" id="btnGoUndo">되돌리기</button>
       <button class="btn btn-primary" id="btnGoNew">새 게임</button>
-    </div>
-  </div>
-</div>
-
-<!-- Records Modal -->
-<div class="modal-overlay" id="modalRecords">
-  <div class="modal modal-records">
-    <div class="modal-header">
-      <span class="modal-emoji">🏆</span>
-      <h2>기록</h2>
-    </div>
-    <div class="records-grid" id="recordsGrid"></div>
-    <p class="records-note">* 승리: 2048 타일 달성</p>
-    <div class="modal-actions">
-      <button class="btn btn-primary" id="btnCloseRecords">닫기</button>
     </div>
   </div>
 </div>
@@ -926,7 +889,7 @@ body{
     <div class="rules-content">
       <div class="rule-section">
         <h3>🎯 목표</h3>
-        <p>같은 숫자 타일 두 개를 합쳐 2048 타일을 만드세요.</p>
+        <p>같은 숫자 타일 두 개를 합쳐 난이도별 목표 타일을 만드세요.<br>초급 2048 · 중급 4096 · 고급 8192 · 전문가 16384</p>
       </div>
       <div class="rule-section">
         <h3>👆 이동 방법</h3>
@@ -947,10 +910,6 @@ body{
         <h3>⭐ 점수</h3>
         <p>합쳐진 타일의 숫자만큼 점수를 얻습니다.<br>(2+2 합치면 4점, 4+4 합치면 8점)</p>
       </div>
-      <div class="rule-section">
-        <h3>↩ 되돌리기</h3>
-        <p>실수하면 되돌리기 버튼으로 이전 상태로 돌아갈 수 있습니다.</p>
-      </div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-primary" id="btnCloseRules">닫기</button>
@@ -970,18 +929,25 @@ body{
 // ═══════════════════════════════════════════
 const STORAGE_KEY = 'game_2048_v1';
 const RECORDS_KEY = 'records_2048_v1';
-const SIZE = 4;
-const TARGET_VALUE = 2048;
-const HISTORY_LIMIT = 50;
 const SWIPE_THRESHOLD = 25;
 const SPAWN_CHANCE_4 = 0.1;
+const DEFAULT_DIFFICULTY = 'easy';
+
+const DIFFICULTY_CONFIG = {
+  easy:   { label: '초급',   size: 4, goalTile: 2048  },
+  medium: { label: '중급',   size: 5, goalTile: 4096  },
+  hard:   { label: '고급',   size: 6, goalTile: 8192  },
+  expert: { label: '전문가', size: 7, goalTile: 16384 }
+};
+
+let SIZE = 4;
+let TARGET_VALUE = 2048;
 
 let state = {
   tiles: [],
   score: 0,
   timer: 0,
-  history: [],
-  future: [],
+  difficulty: DEFAULT_DIFFICULTY,
   gameOver: false,
   winShown: false,
   createdAt: Date.now(),
@@ -990,17 +956,20 @@ let state = {
 
 let nextTileId = 1;
 let timerInterval = null;
-let saveDebounce = null;
 let toastTimeout = null;
 let tileEls = {};
 let touchStart = null;
-let pendingResetAction = 'restart';
 
 // ═══════════════════════════════════════════
 // RECORDS (localStorage)
 // ═══════════════════════════════════════════
 function getDefaultRecords() {
-  return { bestScore: 0, bestTile: 0, gamesPlayed: 0, gamesWon: 0 };
+  return {
+    bestScores: { easy: 0, medium: 0, hard: 0, expert: 0 },
+    bestTiles: { easy: 0, medium: 0, hard: 0, expert: 0 },
+    gamesPlayed: 0,
+    gamesWon: 0
+  };
 }
 
 function loadRecords() {
@@ -1009,9 +978,20 @@ function loadRecords() {
     if (!raw) return getDefaultRecords();
     const data = JSON.parse(raw);
     const defaults = getDefaultRecords();
-    for (const key of Object.keys(defaults)) {
-      if (typeof data[key] !== 'number') data[key] = defaults[key];
+    if (typeof data.bestScores !== 'object' || !data.bestScores) data.bestScores = defaults.bestScores;
+    if (typeof data.bestTiles !== 'object' || !data.bestTiles) data.bestTiles = defaults.bestTiles;
+    if (typeof data.bestScore === 'number') {
+      data.bestScores.easy = data.bestScore;
     }
+    if (typeof data.bestTile === 'number') {
+      data.bestTiles.easy = data.bestTile;
+    }
+    for (const d of Object.keys(defaults.bestScores)) {
+      if (typeof data.bestScores[d] !== 'number') data.bestScores[d] = 0;
+      if (typeof data.bestTiles[d] !== 'number') data.bestTiles[d] = 0;
+    }
+    if (typeof data.gamesPlayed !== 'number') data.gamesPlayed = 0;
+    if (typeof data.gamesWon !== 'number') data.gamesWon = 0;
     return data;
   } catch (e) {
     return getDefaultRecords();
@@ -1026,6 +1006,11 @@ function saveRecords(records) {
   }
 }
 
+function getBestScore() {
+  const records = loadRecords();
+  return records.bestScores[state.difficulty] || 0;
+}
+
 function recordGamePlayed() {
   const records = loadRecords();
   records.gamesPlayed++;
@@ -1034,14 +1019,15 @@ function recordGamePlayed() {
 
 function updateBestScore() {
   const records = loadRecords();
+  const diff = state.difficulty;
   const maxTile = getMaxTile();
   let changed = false;
-  if (state.score > records.bestScore) {
-    records.bestScore = state.score;
+  if (state.score > records.bestScores[diff]) {
+    records.bestScores[diff] = state.score;
     changed = true;
   }
-  if (maxTile > records.bestTile) {
-    records.bestTile = maxTile;
+  if (maxTile > records.bestTiles[diff]) {
+    records.bestTiles[diff] = maxTile;
     changed = true;
   }
   if (changed) saveRecords(records);
@@ -1050,14 +1036,15 @@ function updateBestScore() {
 function recordWin() {
   const records = loadRecords();
   records.gamesWon++;
+  const diff = state.difficulty;
   let isNewRecord = false;
-  if (state.score > records.bestScore) {
-    records.bestScore = state.score;
+  if (state.score > records.bestScores[diff]) {
+    records.bestScores[diff] = state.score;
     isNewRecord = true;
   }
   const maxTile = getMaxTile();
-  if (maxTile > records.bestTile) {
-    records.bestTile = maxTile;
+  if (maxTile > records.bestTiles[diff]) {
+    records.bestTiles[diff] = maxTile;
     isNewRecord = true;
   }
   saveRecords(records);
@@ -1068,8 +1055,10 @@ function recordWin() {
 // DOM REFERENCES
 // ═══════════════════════════════════════════
 const boardEl = document.getElementById('board');
+const boardWrapperEl = document.getElementById('boardWrapper');
 const timerEl = document.getElementById('timerDisplay');
 const scoreEl = document.getElementById('scoreCount');
+const bestScoreCount = document.getElementById('bestScoreCount');
 const goalBadge = document.getElementById('goalBadge');
 const toastEl = document.getElementById('toast');
 let tilesLayerEl = null;
@@ -1077,10 +1066,10 @@ let tilesLayerEl = null;
 const modalWin = document.getElementById('modalWin');
 const modalGameOver = document.getElementById('modalGameOver');
 const modalReset = document.getElementById('modalReset');
-const modalRecords = document.getElementById('modalRecords');
 const modalRules = document.getElementById('modalRules');
 
 const winTime = document.getElementById('winTime');
+const winMessage = document.getElementById('winMessage');
 const winScore = document.getElementById('winScore');
 const winBest = document.getElementById('winBest');
 const winNewRecord = document.getElementById('winNewRecord');
@@ -1089,34 +1078,53 @@ const goScore = document.getElementById('goScore');
 const goBest = document.getElementById('goBest');
 const goNewRecord = document.getElementById('goNewRecord');
 
-const btnUndo = document.getElementById('btnUndo');
-const btnRestart = document.getElementById('btnRestart');
-const btnBest = document.getElementById('btnBest');
+const diffBtns = document.querySelectorAll('.diff-btn');
+
 const btnNewGame = document.getElementById('btnNewGame');
-const btnRecords = document.getElementById('btnRecords');
 const btnRules = document.getElementById('btnRules');
 const btnWinContinue = document.getElementById('btnWinContinue');
 const btnWinNew = document.getElementById('btnWinNew');
-const btnGoUndo = document.getElementById('btnGoUndo');
 const btnGoNew = document.getElementById('btnGoNew');
 const btnCancelReset = document.getElementById('btnCancelReset');
 const btnConfirmReset = document.getElementById('btnConfirmReset');
-const btnCloseRecords = document.getElementById('btnCloseRecords');
 const btnCloseRules = document.getElementById('btnCloseRules');
-const recordsGrid = document.getElementById('recordsGrid');
 
 // ═══════════════════════════════════════════
 // INITIALIZATION
 // ═══════════════════════════════════════════
 function init() {
+  applyDifficulty(state.difficulty);
   buildBoard();
   bindEvents();
   loadGame();
   startTimer();
 }
 
+function applyDifficulty(diff) {
+  const cfg = DIFFICULTY_CONFIG[diff] || DIFFICULTY_CONFIG[DEFAULT_DIFFICULTY];
+  SIZE = cfg.size;
+  TARGET_VALUE = cfg.goalTile;
+  goalBadge.textContent = '목표 ' + TARGET_VALUE;
+  renderDifficultyUI();
+}
+
+function renderDifficultyUI() {
+  for (let i = 0; i < diffBtns.length; i++) {
+    const active = diffBtns[i].dataset.diff === state.difficulty;
+    diffBtns[i].classList.toggle('active', active);
+  }
+}
+
+function setDifficulty(diff) {
+  if (!DIFFICULTY_CONFIG[diff]) return;
+  state.difficulty = diff;
+  applyDifficulty(diff);
+  newGame();
+}
+
 function buildBoard() {
   boardEl.innerHTML = '';
+  boardEl.style.setProperty('--grid-size', SIZE);
   for (let i = 0; i < SIZE * SIZE; i++) {
     const cell = document.createElement('div');
     cell.className = 'grid-cell';
@@ -1126,24 +1134,34 @@ function buildBoard() {
   layer.className = 'tiles-layer';
   boardEl.appendChild(layer);
   tilesLayerEl = layer;
+  computeBoardMetrics();
+}
+
+function computeBoardMetrics() {
+  if (!boardWrapperEl || !boardEl) return;
+  const cw = boardWrapperEl.clientWidth;
+  const ch = boardWrapperEl.clientHeight;
+  if (!cw || !ch) return;
+  const cs = getComputedStyle(boardWrapperEl);
+  const availH = Math.max(0, ch - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom));
+  const border = 3;
+  let gap = 10;
+  if (SIZE >= 6) gap = 8;
+  else if (SIZE === 5) gap = 9;
+  const cell = Math.max(12, Math.floor(Math.min(
+    (cw - 2 * border - gap * (SIZE + 1)) / SIZE,
+    (availH - 2 * border - gap * (SIZE + 1)) / SIZE
+  )));
+  boardEl.style.setProperty('--cell-size', cell + 'px');
+  boardEl.style.setProperty('--cell-gap', gap + 'px');
 }
 
 function bindEvents() {
-  btnUndo.addEventListener('click', undo);
-  btnRestart.addEventListener('click', function(e) {
-    e.stopPropagation();
-    pendingResetAction = 'restart';
-    btnConfirmReset.textContent = '다시하기';
-    modalReset.classList.add('show');
-  });
   btnNewGame.addEventListener('click', function(e) {
     e.stopPropagation();
-    pendingResetAction = 'new';
     btnConfirmReset.textContent = '새 게임';
     modalReset.classList.add('show');
   });
-  btnBest.addEventListener('click', function(e) { e.stopPropagation(); showRecords(); });
-  btnRecords.addEventListener('click', function(e) { e.stopPropagation(); showRecords(); });
   btnRules.addEventListener('click', function(e) {
     e.stopPropagation();
     modalRules.classList.add('show');
@@ -1155,10 +1173,6 @@ function bindEvents() {
     modalWin.classList.remove('show');
     newGame();
   });
-  btnGoUndo.addEventListener('click', function() {
-    modalGameOver.classList.remove('show');
-    undo();
-  });
   btnGoNew.addEventListener('click', function() {
     modalGameOver.classList.remove('show');
     newGame();
@@ -1167,20 +1181,19 @@ function bindEvents() {
     modalReset.classList.remove('show');
   });
   btnConfirmReset.addEventListener('click', function() {
-    const action = pendingResetAction;
     modalReset.classList.remove('show');
-    if (action === 'new') {
-      newGame();
-    } else {
-      resetGame();
-    }
-  });
-  btnCloseRecords.addEventListener('click', function() {
-    modalRecords.classList.remove('show');
+    newGame();
   });
   btnCloseRules.addEventListener('click', function() {
     modalRules.classList.remove('show');
   });
+
+  // Difficulty buttons
+  for (let i = 0; i < diffBtns.length; i++) {
+    diffBtns[i].addEventListener('click', function() {
+      setDifficulty(this.dataset.diff);
+    });
+  }
 
   // D-pad
   const dpad = document.getElementById('dpad');
@@ -1191,23 +1204,9 @@ function bindEvents() {
     handleMove(btn.dataset.dir);
   });
 
-  // Keyboard — arrows move, Ctrl/Cmd+Z undo, Ctrl/Cmd+Y redo
+  // Keyboard — arrows move
   document.addEventListener('keydown', function(e) {
     const key = e.key;
-    if ((e.ctrlKey || e.metaKey) && key === 'z') {
-      e.preventDefault();
-      if (e.shiftKey) {
-        redo();
-      } else {
-        undo();
-      }
-      return;
-    }
-    if ((e.ctrlKey || e.metaKey) && key === 'y') {
-      e.preventDefault();
-      redo();
-      return;
-    }
     if (state.gameOver) return;
     if (key === 'ArrowUp') { e.preventDefault(); handleMove('up'); }
     else if (key === 'ArrowDown') { e.preventDefault(); handleMove('down'); }
@@ -1242,13 +1241,12 @@ function bindEvents() {
   // Click outside closes modals
   document.addEventListener('click', function(e) {
     if (!e.target.closest('.modal')) {
-      modalRecords.classList.remove('show');
       modalRules.classList.remove('show');
       modalReset.classList.remove('show');
     }
   });
 
-  // Tab visibility
+  // Tab visibility — pause/resume timer while away
   document.addEventListener('visibilitychange', function() {
     if (document.hidden && !state.gameOver) {
       saveGame();
@@ -1260,6 +1258,11 @@ function bindEvents() {
 
   window.addEventListener('beforeunload', function() {
     if (!state.gameOver) saveGame();
+  });
+
+  // Keep the board sized to the screen on resize / rotation
+  window.addEventListener('resize', function() {
+    computeBoardMetrics();
   });
 }
 
@@ -1397,78 +1400,19 @@ function hasMoves() {
 
 function handleMove(dir) {
   if (state.gameOver) return;
-  const snapshot = makeSnapshot();
   const info = performMove(dir);
   if (!info.moved) {
     showToast('😊 그 방향으로는 움직일 수 없어요');
     return;
   }
-  pushHistory(snapshot);
-  state.future = [];
   state.score += info.score;
   updateBestScore();
   spawnTile();
   renderMove(info);
   renderScore();
-  updateUndoButtons();
   saveGame();
   const won = checkWin();
   if (!won) checkGameOver();
-}
-
-function makeSnapshot() {
-  const tiles = [];
-  for (let i = 0; i < state.tiles.length; i++) {
-    const t = state.tiles[i];
-    tiles.push({ id: t.id, value: t.value, row: t.row, col: t.col });
-  }
-  return { tiles: tiles, score: state.score };
-}
-
-function applySnapshot(snap) {
-  state.tiles = snap.tiles;
-  state.score = snap.score;
-}
-
-function pushHistory(snap) {
-  state.history.push(snap);
-  if (state.history.length > HISTORY_LIMIT) state.history.shift();
-}
-
-function pushFuture(snap) {
-  state.future.push(snap);
-  if (state.future.length > HISTORY_LIMIT) state.future.shift();
-}
-
-function undo() {
-  if (state.history.length === 0) return;
-  const wasGameOver = state.gameOver;
-  const snap = state.history.pop();
-  pushFuture(makeSnapshot());
-  applySnapshot(snap);
-  state.gameOver = !hasMoves();
-  renderTiles();
-  renderScore();
-  updateUndoButtons();
-  if (state.gameOver) {
-    showGameOverModal();
-  } else {
-    modalGameOver.classList.remove('show');
-    if (wasGameOver) startTimer();
-  }
-  saveGame();
-}
-
-function redo() {
-  if (state.future.length === 0) return;
-  const snap = state.future.pop();
-  pushHistory(makeSnapshot());
-  applySnapshot(snap);
-  state.gameOver = !hasMoves();
-  renderTiles();
-  renderScore();
-  updateUndoButtons();
-  saveGame();
 }
 
 function checkWin() {
@@ -1479,8 +1423,9 @@ function checkWin() {
   saveGame();
   setTimeout(function() {
     winTime.textContent = formatTime(state.timer);
+    winMessage.textContent = TARGET_VALUE + ' 타일을 만들었습니다';
     winScore.textContent = formatNumber(state.score);
-    winBest.textContent = formatNumber(loadRecords().bestScore);
+    winBest.textContent = formatNumber(getBestScore());
     winNewRecord.style.display = isNewRecord ? 'block' : 'none';
     modalWin.classList.add('show');
   }, 400);
@@ -1492,7 +1437,7 @@ function checkGameOver() {
   if (hasMoves()) return;
   state.gameOver = true;
   stopTimer();
-  const prevBest = loadRecords().bestScore;
+  const prevBest = getBestScore();
   updateBestScore();
   const isNewRecord = state.score > prevBest;
   saveGame();
@@ -1505,7 +1450,7 @@ function checkGameOver() {
 function showGameOverModal() {
   goTime.textContent = formatTime(state.timer);
   goScore.textContent = formatNumber(state.score);
-  goBest.textContent = formatNumber(loadRecords().bestScore);
+  goBest.textContent = formatNumber(getBestScore());
   modalGameOver.classList.add('show');
 }
 
@@ -1516,20 +1461,15 @@ function newGame() {
   startFresh(true);
 }
 
-function resetGame() {
-  startFresh(false);
-}
-
 function startFresh(record) {
   state.tiles = [];
   state.score = 0;
   state.timer = 0;
-  state.history = [];
-  state.future = [];
   state.gameOver = false;
   state.winShown = false;
   state.createdAt = Date.now();
   nextTileId = 1;
+  buildBoard();
   spawnTile();
   spawnTile();
   modalWin.classList.remove('show');
@@ -1538,7 +1478,6 @@ function startFresh(record) {
   if (record) recordGamePlayed();
   renderTiles();
   renderScore();
-  updateUndoButtons();
   startTimer();
   saveGame();
   showToast(record ? '🎮 새 게임 시작!' : '🔄 게임을 다시 시작합니다');
@@ -1629,15 +1568,13 @@ function tileExists(id) {
 
 function renderScore() {
   scoreEl.textContent = formatNumber(state.score);
+  bestScoreCount.textContent = formatNumber(getBestScore());
+  goalBadge.textContent = '목표 ' + TARGET_VALUE;
   goalBadge.classList.toggle('achieved', getMaxTile() >= TARGET_VALUE);
 }
 
 function renderTimer() {
   timerEl.textContent = formatTime(state.timer);
-}
-
-function updateUndoButtons() {
-  btnUndo.disabled = state.history.length === 0;
 }
 
 function addRipple(target, e) {
@@ -1663,28 +1600,6 @@ function addRipple(target, e) {
 }
 
 // ═══════════════════════════════════════════
-// RECORDS MODAL
-// ═══════════════════════════════════════════
-function showRecords() {
-  const records = loadRecords();
-  const items = [
-    { label: '최고 점수', value: formatNumber(records.bestScore) + '점' },
-    { label: '최고 타일', value: records.bestTile > 0 ? records.bestTile : '-' },
-    { label: '게임 횟수', value: formatNumber(records.gamesPlayed) + '회' },
-    { label: '승리 횟수', value: formatNumber(records.gamesWon) + '회' }
-  ];
-  let html = '';
-  for (let i = 0; i < items.length; i++) {
-    html += '<div class="record-card">' +
-      '<span class="record-val">' + items[i].value + '</span>' +
-      '<span class="record-label">' + items[i].label + '</span>' +
-      '</div>';
-  }
-  recordsGrid.innerHTML = html;
-  modalRecords.classList.add('show');
-}
-
-// ═══════════════════════════════════════════
 // TIMER — counts up, no penalty
 // ═══════════════════════════════════════════
 function startTimer() {
@@ -1694,7 +1609,6 @@ function startTimer() {
     if (!state.gameOver) {
       state.timer++;
       renderTimer();
-      if (state.timer % 5 === 0) saveGameDebounced();
     }
   }, 1000);
 }
@@ -1712,6 +1626,9 @@ function formatTime(secs) {
   return String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
 }
 
+// ═══════════════════════════════════════════
+// FORMATTING
+// ═══════════════════════════════════════════
 function formatNumber(n) {
   return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
@@ -1725,7 +1642,7 @@ function saveGame() {
     tiles: state.tiles,
     score: state.score,
     timer: state.timer,
-    history: state.history.slice(-HISTORY_LIMIT),
+    difficulty: state.difficulty,
     winShown: state.winShown,
     gameOver: state.gameOver,
     nextTileId: nextTileId,
@@ -1737,11 +1654,6 @@ function saveGame() {
   } catch (e) {
     console.warn('Failed to save game:', e);
   }
-}
-
-function saveGameDebounced() {
-  if (saveDebounce) clearTimeout(saveDebounce);
-  saveDebounce = setTimeout(function() { saveGame(); }, 300);
 }
 
 function loadGame() {
@@ -1756,6 +1668,9 @@ function loadGame() {
     newGame();
     return;
   }
+  const diff = DIFFICULTY_CONFIG[data.difficulty] ? data.difficulty : DEFAULT_DIFFICULTY;
+  state.difficulty = diff;
+  applyDifficulty(diff);
   const tiles = [];
   let maxId = 0;
   for (let i = 0; i < data.tiles.length; i++) {
@@ -1774,14 +1689,13 @@ function loadGame() {
   state.tiles = tiles;
   state.score = typeof data.score === 'number' ? data.score : 0;
   state.timer = typeof data.timer === 'number' ? data.timer : 0;
-  state.history = Array.isArray(data.history) ? data.history : [];
   state.winShown = !!data.winShown;
   nextTileId = (typeof data.nextTileId === 'number' && data.nextTileId > maxId) ? data.nextTileId : maxId + 1;
   state.createdAt = data.createdAt || Date.now();
   state.gameOver = !hasMoves();
+  buildBoard();
   renderTiles();
   renderScore();
-  updateUndoButtons();
   if (state.gameOver) {
     setTimeout(function() {
       showGameOverModal();
