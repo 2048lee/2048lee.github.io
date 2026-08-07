@@ -808,6 +808,7 @@ body{
   <header class="header">
     <h1 class="logo">👨🏻 아빠의 2048</h1>
     <div class="header-actions">
+      <button class="header-btn header-btn-outline" id="btnRules" aria-label="규칙">규칙</button>
       <button class="header-btn header-btn-outline" id="btnNewGame" aria-label="새 게임">새 게임</button>
     </div>
   </header>
@@ -820,7 +821,6 @@ body{
     </div>
     <span class="status-item score-display">점수 <span class="score-count" id="scoreCount">0</span></span>
     <span class="status-item score-display">최고 <span class="score-count" id="bestScoreCount">0</span></span>
-    <button class="status-item status-btn" id="btnRules" aria-label="규칙">규칙</button>
   </div>
 
   <!-- Board — The star of the show -->
@@ -1239,17 +1239,21 @@ function bindEvents() {
     else if (key === 'ArrowRight') { e.preventDefault(); handleMove('right'); }
   });
 
-  // Touch swipe on the board — dominant axis only
-  boardEl.addEventListener('touchstart', function(e) {
+  // Touch swipe on the screen — dominant axis only
+  document.addEventListener('touchstart', function(e) {
+    if (e.target.closest('.modal') || e.target.closest('.header-btn')) return;
     const t = e.touches[0];
     touchStart = { x: t.clientX, y: t.clientY };
   }, { passive: true });
 
-  boardEl.addEventListener('touchmove', function(e) {
-    e.preventDefault();
+  document.addEventListener('touchmove', function(e) {
+    // Only prevent default if we're not inside a scrollable modal
+    if (!e.target.closest('.modal')) {
+      e.preventDefault();
+    }
   }, { passive: false });
 
-  boardEl.addEventListener('touchend', function(e) {
+  document.addEventListener('touchend', function(e) {
     if (!touchStart) return;
     const t = e.changedTouches[0];
     const dx = t.clientX - touchStart.x;
