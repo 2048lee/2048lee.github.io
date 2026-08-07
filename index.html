@@ -874,6 +874,7 @@ body{
       <div class="stat"><span class="stat-val" id="winTime">00:00</span><span class="stat-label">시간</span></div>
       <div class="stat"><span class="stat-val" id="winScore">0</span><span class="stat-label">점수</span></div>
       <div class="stat"><span class="stat-val" id="winBest">0</span><span class="stat-label">최고기록</span></div>
+      <div class="stat"><span class="stat-val" id="winMaxTile">0</span><span class="stat-label">최고타일</span></div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-secondary" id="btnWinContinue">계속하기</button>
@@ -895,6 +896,7 @@ body{
       <div class="stat"><span class="stat-val" id="goTime">00:00</span><span class="stat-label">시간</span></div>
       <div class="stat"><span class="stat-val" id="goScore">0</span><span class="stat-label">점수</span></div>
       <div class="stat"><span class="stat-val" id="goBest">0</span><span class="stat-label">최고기록</span></div>
+      <div class="stat"><span class="stat-val" id="goMaxTile">0</span><span class="stat-label">최고타일</span></div>
     </div>
     <div class="modal-actions">
       <button class="btn btn-primary" id="btnGoNew">새 게임</button>
@@ -1095,10 +1097,12 @@ const winTime = document.getElementById('winTime');
 const winMessage = document.getElementById('winMessage');
 const winScore = document.getElementById('winScore');
 const winBest = document.getElementById('winBest');
+const winMaxTile = document.getElementById('winMaxTile');
 const winNewRecord = document.getElementById('winNewRecord');
 const goTime = document.getElementById('goTime');
 const goScore = document.getElementById('goScore');
 const goBest = document.getElementById('goBest');
+const goMaxTile = document.getElementById('goMaxTile');
 const goNewRecord = document.getElementById('goNewRecord');
 
 const diffBtns = document.querySelectorAll('.diff-btn');
@@ -1455,6 +1459,7 @@ function checkWin() {
     winMessage.textContent = TARGET_VALUE + ' 타일을 만들었습니다';
     winScore.textContent = formatNumber(state.score);
     winBest.textContent = formatNumber(getBestScore());
+    winMaxTile.textContent = formatNumber(getMaxTile());
     winNewRecord.style.display = isNewRecord ? 'block' : 'none';
     modalWin.classList.add('show');
   }, 400);
@@ -1480,6 +1485,7 @@ function showGameOverModal() {
   goTime.textContent = formatTime(state.timer);
   goScore.textContent = formatNumber(state.score);
   goBest.textContent = formatNumber(getBestScore());
+  goMaxTile.textContent = formatNumber(getMaxTile());
   modalGameOver.classList.add('show');
 }
 
