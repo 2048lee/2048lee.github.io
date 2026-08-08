@@ -1056,24 +1056,13 @@ function updateBestScore() {
     changed = true;
   }
   if (changed) saveRecords(records);
+  return changed;
 }
 
 function recordWin() {
   const records = loadRecords();
   records.gamesWon++;
-  const diff = state.difficulty;
-  let isNewRecord = false;
-  if (state.score > records.bestScores[diff]) {
-    records.bestScores[diff] = state.score;
-    isNewRecord = true;
-  }
-  const maxTile = getMaxTile();
-  if (maxTile > records.bestTiles[diff]) {
-    records.bestTiles[diff] = maxTile;
-    isNewRecord = true;
-  }
   saveRecords(records);
-  return isNewRecord;
 }
 
 // ═══════════════════════════════════════════
@@ -1439,20 +1428,20 @@ function handleMove(dir) {
     return;
   }
   state.score += info.score;
-  updateBestScore();
+  const isNewRecord = updateBestScore();
   spawnTile();
   renderMove(info);
   renderScore();
   saveGame();
-  const won = checkWin();
-  if (!won) checkGameOver();
+  const won = checkWin(isNewRecord);
+  if (!won) checkGameOver(isNewRecord);
 }
 
-function checkWin() {
+function checkWin(isNewRecord) {
   if (state.winShown) return false;
   if (getMaxTile() < TARGET_VALUE) return false;
   state.winShown = true;
-  const isNewRecord = recordWin();
+  recordWin();
   saveGame();
   setTimeout(function() {
     winTime.textContent = formatTime(state.timer);
@@ -1466,14 +1455,12 @@ function checkWin() {
   return true;
 }
 
-function checkGameOver() {
+function checkGameOver(isNewRecord) {
   if (state.gameOver) return;
   if (hasMoves()) return;
   state.gameOver = true;
   stopTimer();
-  const prevBest = getBestScore();
   updateBestScore();
-  const isNewRecord = state.score > prevBest;
   saveGame();
   setTimeout(function() {
     showGameOverModal();
