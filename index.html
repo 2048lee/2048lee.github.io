@@ -255,6 +255,10 @@ body{
   border-color:var(--primary);
   transition:all var(--transition-base);
 }
+.goal-badge.diff-easy{background:var(--success-bg);color:var(--success);border-color:var(--success)}
+.goal-badge.diff-medium{background:var(--primary-light);color:var(--primary);border-color:var(--primary)}
+.goal-badge.diff-hard{background:var(--warning-bg);color:var(--warning);border-color:var(--warning)}
+.goal-badge.diff-expert{background:var(--error-bg);color:var(--error);border-color:var(--error)}
 .goal-badge.achieved{
   background:var(--success-bg);
   color:var(--success);
@@ -1127,6 +1131,10 @@ function applyDifficulty(diff) {
   SIZE = cfg.size;
   TARGET_VALUE = cfg.goalTile;
   goalBadge.textContent = TARGET_VALUE;
+  goalBadge.classList.toggle('diff-easy', diff === 'easy');
+  goalBadge.classList.toggle('diff-medium', diff === 'medium');
+  goalBadge.classList.toggle('diff-hard', diff === 'hard');
+  goalBadge.classList.toggle('diff-expert', diff === 'expert');
   renderDifficultyUI();
 }
 
