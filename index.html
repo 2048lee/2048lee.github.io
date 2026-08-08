@@ -1016,10 +1016,16 @@ function loadRecords() {
     if (typeof data.bestScores !== 'object' || !data.bestScores) data.bestScores = defaults.bestScores;
     if (typeof data.bestTiles !== 'object' || !data.bestTiles) data.bestTiles = defaults.bestTiles;
     if (typeof data.bestScore === 'number') {
-      data.bestScores.easy = data.bestScore;
+      if (data.bestScore > (data.bestScores.easy || 0)) {
+        data.bestScores.easy = data.bestScore;
+      }
+      delete data.bestScore;
     }
     if (typeof data.bestTile === 'number') {
-      data.bestTiles.easy = data.bestTile;
+      if (data.bestTile > (data.bestTiles.easy || 0)) {
+        data.bestTiles.easy = data.bestTile;
+      }
+      delete data.bestTile;
     }
     for (const d of Object.keys(defaults.bestScores)) {
       if (typeof data.bestScores[d] !== 'number') data.bestScores[d] = 0;
