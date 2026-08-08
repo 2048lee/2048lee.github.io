@@ -290,6 +290,12 @@ body{
   margin-left:var(--space-1);
   font-variant-numeric:tabular-nums;
 }
+/* Score count — digit-based size steps.
+   점수 자릿수가 커질수록 단계별 축소, 노년층 가독성을 위해 14px 미만으로는 내려가지 않음 */
+.score-count.score-lg{font-size:var(--text-sm)}     /* ~7자리 */
+.score-count.score-md,
+.score-count.score-sm,
+.score-count.score-xs{font-size:14px}               /* 8자리+ 축소 단계 (최소 14px) */
 
 /* ═══════════════════════════════════════
    NEW GAME MODAL — Difficulty grid, 2×2 large buttons
@@ -815,7 +821,7 @@ body{
 
   <!-- Status bar — Large, clear info -->
   <div class="status-bar">
-    <span class="status-item goal-badge" id="goalBadge">목표 2048</span>
+    <span class="status-item goal-badge" id="goalBadge">2048</span>
     <div class="status-item timer-group">
       <span class="timer" id="timerDisplay">00:00</span>
     </div>
@@ -1120,7 +1126,7 @@ function applyDifficulty(diff) {
   const cfg = DIFFICULTY_CONFIG[diff] || DIFFICULTY_CONFIG[DEFAULT_DIFFICULTY];
   SIZE = cfg.size;
   TARGET_VALUE = cfg.goalTile;
-  goalBadge.textContent = '목표 ' + TARGET_VALUE;
+  goalBadge.textContent = TARGET_VALUE;
   renderDifficultyUI();
 }
 
@@ -1588,10 +1594,22 @@ function tileExists(id) {
   return false;
 }
 
+function applyScoreSizeClass(el, value) {
+  const digits = String(Math.floor(value)).replace(/[^\d]/g, '').length || 1;
+  let cls = 'score-lg';
+  if (digits >= 8 && digits <= 9) cls = 'score-md';
+  else if (digits >= 10 && digits <= 11) cls = 'score-sm';
+  else if (digits >= 12) cls = 'score-xs';
+  el.classList.remove('score-lg', 'score-md', 'score-sm', 'score-xs');
+  el.classList.add(cls);
+}
+
 function renderScore() {
   scoreEl.textContent = formatNumber(state.score);
   bestScoreCount.textContent = formatNumber(getBestScore());
-  goalBadge.textContent = '목표 ' + TARGET_VALUE;
+  applyScoreSizeClass(scoreEl, state.score);
+  applyScoreSizeClass(bestScoreCount, getBestScore());
+  goalBadge.textContent = TARGET_VALUE;
   goalBadge.classList.toggle('achieved', getMaxTile() >= TARGET_VALUE);
 }
 
