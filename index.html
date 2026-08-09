@@ -635,6 +635,33 @@ body{
   transform:scale(0.97);
 }
 
+/* Portal button — go back to the games portal */
+.btn-portal{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:var(--space-2);
+  width:100%;
+  margin-top:var(--space-3);
+  padding:var(--space-3) var(--space-5);
+  border-radius:var(--btn-radius);
+  border:2.5px dashed var(--border);
+  background:var(--surface-raised);
+  color:var(--text);
+  font-size:var(--text-base);
+  font-weight:var(--weight-bold);
+  font-family:var(--font-family);
+  cursor:pointer;
+  transition:all var(--transition-base);
+  min-height:44px;
+  line-height:1.2;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-portal:active{
+  background:var(--border-thin);
+  transform:scale(0.98);
+}
+
 /* Completion Stats */
 .completion-stats{
   display:flex;
@@ -868,6 +895,7 @@ body{
       <button class="btn btn-secondary" id="btnCancelReset">취소</button>
       <button class="btn btn-primary" id="btnConfirmReset">시작하기</button>
     </div>
+    <button class="btn-portal" type="button">🎮 다른 게임하기</button>
   </div>
 </div>
 
@@ -890,6 +918,7 @@ body{
       <button class="btn btn-secondary" id="btnWinContinue">계속하기</button>
       <button class="btn btn-primary" id="btnWinNew">새 게임</button>
     </div>
+    <button class="btn-portal" type="button">🎮 다른 게임하기</button>
   </div>
 </div>
 
@@ -911,6 +940,7 @@ body{
     <div class="modal-actions">
       <button class="btn btn-primary" id="btnGoNew">새 게임</button>
     </div>
+    <button class="btn-portal" type="button">🎮 다른 게임하기</button>
   </div>
 </div>
 
@@ -949,6 +979,7 @@ body{
     <div class="modal-actions">
       <button class="btn btn-primary" id="btnCloseRules">닫기</button>
     </div>
+    <button class="btn-portal" type="button">🎮 다른 게임하기</button>
   </div>
 </div>
 
@@ -978,6 +1009,7 @@ const DIFFICULTY_CONFIG = {
 let SIZE = 4;
 let TARGET_VALUE = 2048;
 
+const PORTAL_URL = 'https://appa-games.github.io/';
 let state = {
   tiles: [],
   score: 0,
@@ -1120,6 +1152,7 @@ const btnGoNew = document.getElementById('btnGoNew');
 const btnCancelReset = document.getElementById('btnCancelReset');
 const btnConfirmReset = document.getElementById('btnConfirmReset');
 const btnCloseRules = document.getElementById('btnCloseRules');
+const portalBtns = document.querySelectorAll('.btn-portal');
 
 // ═══════════════════════════════════════════
 // INITIALIZATION
@@ -1224,6 +1257,13 @@ function bindEvents() {
   btnCloseRules.addEventListener('click', function() {
     modalRules.classList.remove('show');
   });
+
+  // Other games — navigate back to the portal
+  for (let i = 0; i < portalBtns.length; i++) {
+    portalBtns[i].addEventListener('click', function() {
+      window.location.href = PORTAL_URL;
+    });
+  }
 
   // Difficulty buttons — modal selection, applied on confirm
   for (let i = 0; i < diffBtns.length; i++) {
